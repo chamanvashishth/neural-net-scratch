@@ -1,64 +1,11 @@
-"""
-Neural Network From Scratch (NumPy Only)
+"""Neural Network From Scratch (NumPy Only)."""
 
-Package Exports
----------------
-Layers:
-    Dense
-    ReLU
-    BatchNorm
-    Dropout
-    Softmax
-
-Loss:
-    CrossEntropyLoss
-
-Optimizer:
-    Adam
-
-Network:
-    NeuralNetwork
-
-Data Utilities:
-    load_mnist
-    one_hot_encode
-    train_val_split
-
-Metrics:
-    accuracy
-    precision_score_macro
-    recall_score_macro
-    f1_score_macro
-    confusion_matrix_np
-"""
-
-from .layers import (
-    Dense,
-    ReLU,
-    BatchNorm,
-    Dropout,
-    Softmax
-)
-
+from .layers import Dense, ReLU, BatchNorm, Dropout, Softmax
 from .losses import CrossEntropyLoss
-
 from .optimizers import Adam
-
 from .network import NeuralNetwork
-
-from .data_loader import (
-    load_mnist,
-    one_hot_encode,
-    train_val_split
-)
-
-from .metrics import (
-    accuracy,
-    precision_score_macro,
-    recall_score_macro,
-    f1_score_macro,
-    confusion_matrix_np
-)
+from .data_loader import load_mnist, one_hot, iterate_minibatches
+from .metrics import accuracy, confusion_matrix, precision_recall_f1
 
 __version__ = "1.0.0"
 
@@ -72,11 +19,9 @@ __all__ = [
     "Adam",
     "NeuralNetwork",
     "load_mnist",
-    "one_hot_encode",
-    "train_val_split",
+    "one_hot",
+    "iterate_minibatches",
     "accuracy",
-    "precision_score_macro",
-    "recall_score_macro",
-    "f1_score_macro",
-    "confusion_matrix_np",
+    "confusion_matrix",
+    "precision_recall_f1",
 ]
