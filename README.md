@@ -29,6 +29,24 @@
 
 ---
 
+## Why this project stands out
+
+This repository is intentionally **framework-free at the neural-network layer**. It is not a wrapper around a prebuilt model; the learning mechanics are implemented directly with NumPy.
+
+| Signal | What is implemented |
+|---|---|
+| **From-scratch ML** | Dense layers, activations, BatchNorm, Dropout, Softmax |
+| **Optimization** | Adam with moment estimates + bias correction |
+| **Differentiation** | Manual backward pass through the network |
+| **Numerical stability** | Stable Softmax / Cross-Entropy path |
+| **Model selection** | Validation-based best-checkpoint selection |
+| **Evaluation** | Held-out test set + multiple classification metrics |
+| **Diagnostics** | Curves, confusion matrix, F1, predictions, weights |
+
+> **The point is not the 97.4% number alone. The point is being able to explain where that number came from.**
+
+---
+
 ## What is this?
 
 This repository is a **fully connected neural network implemented from scratch with NumPy** for handwritten-digit classification on MNIST.
@@ -396,6 +414,12 @@ The evaluator:
 
 ## Reported Benchmark
 
+<p align="center">
+  <img src="https://img.shields.io/badge/97.4%25-Reported%20Test%20Accuracy-2ea44f?style=for-the-badge" alt="Reported test accuracy"/>
+  <img src="https://img.shields.io/badge/235%2C146-Trainable%20Parameters-8250df?style=for-the-badge" alt="Trainable parameters"/>
+  <img src="https://img.shields.io/badge/10%2C000-Test%20Samples-6f42c1?style=for-the-badge" alt="Test samples"/>
+</p>
+
 The repository currently reports:
 
 | Metric | Reported |
@@ -542,6 +566,25 @@ neural-net-scratch/
 
 ---
 
+## Reading the repository
+
+If you want to understand the project quickly, read it in this order:
+
+```text
+1. src/layers.py        → what each neural-network component does
+2. src/losses.py        → how the objective is computed
+3. src/network.py       → how the components form a model
+4. src/optimizers.py    → how parameters are updated
+5. train.py             → how learning is orchestrated
+6. evaluate.py          → how generalization is measured
+7. visualize.py         → how failures and behavior are inspected
+8. notebooks/           → mathematical derivations
+```
+
+This ordering follows the actual flow of information through the system.
+
+---
+
 ## Engineering Decisions
 
 ### Framework-free core
@@ -604,6 +647,24 @@ The project is designed to optimize for:
 - implementation depth
 
 rather than benchmark chasing.
+
+---
+
+## Experiment Ideas
+
+The current implementation gives a clean baseline for controlled experiments.
+
+| Experiment | Question |
+|---|---|
+| Remove Dropout | Does regularization improve validation performance? |
+| Remove BatchNorm | How much does normalization affect optimization? |
+| Change optimizer | How does Adam compare with a simpler update rule? |
+| Change hidden width | What is the accuracy/parameter trade-off? |
+| Change learning rate | How sensitive is convergence to step size? |
+| Inspect failure cases | Which digits remain difficult and why? |
+| Gradient checking | Do analytical gradients agree with finite differences? |
+
+These are intentionally framed as experiments rather than claimed results.
 
 ---
 
@@ -693,4 +754,12 @@ This project is licensed under the **MIT License**.
 <p align="center">
   <strong>Built from first principles with NumPy.</strong><br/>
   <sub>Understand the gradient. Understand the model.</sub>
+</p>
+
+<p align="center">
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-the-mathematics">Math</a> •
+  <a href="#-evaluation-pipeline">Evaluation</a> •
+  <a href="#-reproducibility">Reproduce</a>
 </p>
