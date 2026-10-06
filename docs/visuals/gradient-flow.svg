@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="300" viewBox="0 0 1100 300">
+<rect width="1100" height="300" rx="24" fill="#0d1117"/>
+<text x="550" y="42" text-anchor="middle" fill="#f0f6fc" font-family="Arial" font-size="26" font-weight="700">Manual Backpropagation</text>
+<g font-family="Arial" text-anchor="middle" font-size="16" font-weight="700">
+<g stroke="#d29922" stroke-width="2" fill="#161b22">
+<rect x="55" y="110" width="180" height="65" rx="14"/><rect x="275" y="110" width="180" height="65" rx="14"/>
+<rect x="495" y="110" width="180" height="65" rx="14"/><rect x="715" y="110" width="150" height="65" rx="14"/><rect x="905" y="110" width="140" height="65" rx="14"/>
+</g>
+<g fill="#f0f6fc"><text x="145" y="149">Loss</text><text x="365" y="149">Softmax + CE</text><text x="585" y="149">Dense gradients</text><text x="790" y="149">BatchNorm</text><text x="975" y="149">ReLU</text></g>
+</g>
+<path d="M1000 205 C1000 250 100 250 100 205" fill="none" stroke="#d29922" stroke-width="3" stroke-dasharray="7 7">
+<animate attributeName="stroke-dashoffset" from="0" to="-56" dur="1s" repeatCount="indefinite"/>
+</path>
+<text x="550" y="275" fill="#8b949e" font-family="Arial" font-size="15" text-anchor="middle">Gradients flow backward through the computational graph and update parameters with Adam.</text>
+</svg>
