@@ -19,7 +19,7 @@
   <img src="https://img.shields.io/badge/NumPy-only-013243?logo=numpy&logoColor=white" alt="NumPy"/>
   <img src="https://img.shields.io/badge/MNIST-10%20Classes-6f42c1" alt="MNIST"/>
   <img src="https://img.shields.io/badge/Parameters-235%2C146-8250df" alt="Parameters"/>
-  <img src="https://img.shields.io/badge/Reported%20Accuracy-97.4%25-2ea44f" alt="Reported Accuracy"/>
+  <img src="https://img.shields.io/badge/Verified%20Accuracy-98.39%25-2ea44f" alt="Verified Accuracy"/>
   <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="MIT License"/>
 </p>
 
@@ -43,7 +43,7 @@ This repository is intentionally **framework-free at the neural-network layer**.
 | **Evaluation** | Held-out test set + multiple classification metrics |
 | **Diagnostics** | Curves, confusion matrix, F1, predictions, weights |
 
-> **The point is not the 97.4% number alone. The point is being able to explain where that number came from.**
+> **The point is not the percentage alone. The point is being able to explain where that number came from.**
 
 ---
 
@@ -415,24 +415,83 @@ The evaluator:
 ## Reported Benchmark
 
 <p align="center">
-  <img src="https://img.shields.io/badge/97.4%25-Reported%20Test%20Accuracy-2ea44f?style=for-the-badge" alt="Reported test accuracy"/>
+  <img src="https://img.shields.io/badge/97.4%25-Reported%20Benchmark-6f42c1?style=for-the-badge" alt="Reported benchmark"/>
+  <img src="https://img.shields.io/badge/98.39%25-Verified%20Local%20Run-2ea44f?style=for-the-badge" alt="Verified local run"/>
   <img src="https://img.shields.io/badge/235%2C146-Trainable%20Parameters-8250df?style=for-the-badge" alt="Trainable parameters"/>
   <img src="https://img.shields.io/badge/10%2C000-Test%20Samples-6f42c1?style=for-the-badge" alt="Test samples"/>
 </p>
 
-The repository currently reports:
+The repository originally reported a 97.4% benchmark. A subsequent local run of the current checkpoint produced a higher verified result.
 
-| Metric | Reported |
-|---|---:|
-| **Test Accuracy** | **97.4%** |
-| Macro Precision | 97.0% |
-| Macro Recall | 97.0% |
-| Macro F1 | 97.0% |
-| Best reported class | Digit 1 — 99.2% F1 |
-| Lowest reported class | Digit 5 — 95.5% F1 |
-| Trainable parameters | 235,146 |
+| Metric | Original reported | Verified local run |
+|---|---:|---:|
+| **Test Accuracy** | 97.4% | **98.39%** |
+| **Macro Precision** | 97.0% | **98.40%** |
+| **Macro Recall** | 97.0% | **98.38%** |
+| **Macro F1** | 97.0% | **98.39%** |
+| Test samples | 10,000 | **10,000** |
 
-> **Important:** these are repository-reported benchmark values. Run the evaluation locally to verify the current checkpoint rather than treating README numbers as immutable results.
+### Verified local run
+
+The current checkpoint was successfully evaluated locally with:
+
+```bash
+python evaluate.py
+```
+
+Verified metrics:
+
+- **98.39% test accuracy**
+- **98.40% macro precision**
+- **98.38% macro recall**
+- **98.39% macro F1**
+
+Per-class F1 remained above 97.8%:
+
+| Digit | F1 |
+|---:|---:|
+| 0 | 98.98% |
+| 1 | **99.16%** |
+| 2 | 98.31% |
+| 3 | 98.22% |
+| 4 | 98.37% |
+| 5 | 98.71% |
+| 6 | 98.43% |
+| 7 | **97.82%** |
+| 8 | 97.99% |
+| 9 | 97.87% |
+
+The confusion matrix is strongly diagonal, indicating that the classifier correctly separates the large majority of examples across all ten classes.
+
+> **Reproducibility note:** the 98.39% result is a verified local evaluation of the current checkpoint. It is presented separately from the older 97.4% repository-reported benchmark rather than silently rewriting the historical number.
+
+---
+
+## Training Diagnostics
+
+The local training artifacts also provide a useful view of optimization behavior.
+
+### Accuracy
+
+The training run reaches approximately **99.51% peak training accuracy**, while validation accuracy peaks at **98.40%** around epoch 48.
+
+The validation curve improves rapidly in the early epochs and then plateaus around 98%. The growing gap between training and validation performance is consistent with a **modest generalization gap** rather than a catastrophic failure.
+
+### Loss
+
+The lowest recorded validation loss is approximately **0.06188 at epoch 16**. Training loss continues decreasing substantially afterward, while validation loss fluctuates around a higher plateau.
+
+This is why validation-based checkpoint selection matters: the lowest training loss is not automatically the best generalizing model.
+
+### Parameter distributions
+
+The generated weight-distribution diagnostic compares the initial He-initialized weights with the final learned distributions for W1, W2, and W3. This provides a direct view of how optimization changes the parameter landscape.
+
+### Sample predictions
+
+The generated prediction grid shows the model correctly classifying the displayed test examples with generally high confidence. One displayed digit-5 example is notably less confident at **84.3%**, which is useful evidence that confidence is not uniformly saturated.
+
+> The diagnostic plots are analysis artifacts from the local run; they are not treated as additional benchmark claims.
 
 ---
 
@@ -758,7 +817,7 @@ This project is licensed under the **MIT License**.
 
 <p align="center">
   <a href="#-quick-start">Quick Start</a> •
-  <a href="#-architecture">Architecture</a> •
+  <a href="#-model-architecture">Architecture</a> •
   <a href="#-the-mathematics">Math</a> •
   <a href="#-evaluation-pipeline">Evaluation</a> •
   <a href="#-reproducibility">Reproduce</a>
