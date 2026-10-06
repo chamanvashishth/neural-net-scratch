@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="350" viewBox="0 0 1100 350">
+<rect width="1100" height="350" rx="24" fill="#0d1117"/>
+<text x="550" y="42" text-anchor="middle" fill="#f0f6fc" font-family="Arial" font-size="26" font-weight="700">Independent Test Evaluation</text>
+<g font-family="Arial" text-anchor="middle">
+<g stroke="#58a6ff" stroke-width="2" fill="#161b22">
+<rect x="60" y="120" width="180" height="80" rx="15"/><rect x="300" y="120" width="180" height="80" rx="15"/>
+<rect x="540" y="120" width="180" height="80" rx="15"/><rect x="780" y="120" width="250" height="80" rx="15"/>
+</g>
+<g fill="#f0f6fc" font-size="17" font-weight="700">
+<text x="150" y="153">Best checkpoint</text><text x="150" y="178">saved from validation</text>
+<text x="390" y="153">10,000 test samples</text><text x="390" y="178">never used for training</text>
+<text x="630" y="153">Predictions</text><text x="630" y="178">class probabilities</text>
+<text x="905" y="145">Metrics + diagnostics</text><text x="905" y="170">Accuracy • Precision</text><text x="905" y="192">Recall • F1 • Confusion Matrix</text>
+</g>
+<g stroke="#8b949e" stroke-width="3"><path d="M240 160h60"/><path d="M480 160h60"/><path d="M720 160h60"/></g>
+</g></svg>
