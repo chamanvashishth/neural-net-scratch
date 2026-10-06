@@ -60,51 +60,14 @@ The repository therefore treats the neural network as an **engineering and learn
 
 ## Architecture
 
+![Neural Network Architecture](docs/visuals/architecture.svg)
+
+The model is a compact fully connected classifier:
+
 ```
-MNIST Image
-  28 × 28
-     │
-     ▼
-Flatten + Normalize
-  784 features
-     │
-     ▼
-Dense
-  784 → 256
-     │
-     ▼
-ReLU
-     │
-     ▼
-BatchNorm
-     │
-     ▼
-Dropout
-  p = 0.30
-     │
-     ▼
-Dense
-  256 → 128
-     │
-     ▼
-ReLU
-     │
-     ▼
-BatchNorm
-     │
-     ▼
-Dropout
-  p = 0.20
-     │
-     ▼
-Dense
-  128 → 10
-     │
-     ▼
-Stable Softmax
-     │
-     ▼
-10-class probability distribution
+MNIST → Flatten/Normalize → Dense(784→256) → ReLU → BatchNorm → Dropout
+      → Dense(256→128) → ReLU → BatchNorm → Dropout
+      → Dense(128→10) → Stable Softmax
 ```
 
 ### Model specification
@@ -125,7 +88,9 @@ Stable Softmax
 | Initialization | He / Kaiming |
 | Random seed | 42 |
 
----
+### Forward → backward → update
+
+![Animated training loop](docs/visuals/training-loop.svg)
 
 ## Training Setup
 
@@ -301,13 +266,25 @@ The repository currently reports the following benchmark values:
 
 ## Diagnostics & Visualizations
 
-The project includes a separate visualization pipeline:
+The repository includes a dedicated visualization pipeline:
 
 ```bash
 python visualize.py
 ```
 
-It produces:
+The generated charts are experiment artifacts rather than static documentation assets. This keeps the repository clean while allowing every plot to be regenerated from the current checkpoint and `results/history.json`.
+
+### Evaluation flow
+
+![Independent test evaluation](docs/visuals/evaluation-pipeline.svg)
+
+### Training and model internals
+
+![Manual backpropagation](docs/visuals/gradient-flow.svg)
+
+### Generated diagnostics
+
+After running `python visualize.py`, the following files are produced locally:
 
 | Artifact | Purpose |
 |---|---|
@@ -318,25 +295,7 @@ It produces:
 | `results/sample_predictions.png` | Visual prediction inspection |
 | `results/per_class_f1.png` | F1 score by digit |
 
-### Training curves
-
-![Loss Curve](results/loss_curve.png)
-
-![Accuracy Curve](results/accuracy_curve.png)
-
-### Confusion matrix
-
-![Confusion Matrix](results/confusion_matrix.png)
-
-### Model diagnostics
-
-![Weight Distributions](results/weight_distributions.png)
-
-![Sample Predictions](results/sample_predictions.png)
-
-![Per-Class F1](results/per_class_f1.png)
-
----
+> **Why are the PNGs not embedded here?** GitHub previously showed broken-image placeholders because those generated files were not committed to the repository. The README now uses versioned SVG documentation assets that always render, while the real experiment plots remain reproducible through `visualize.py`.
 
 ## Quick Start
 
@@ -391,6 +350,13 @@ neural-net-scratch/
 ├── notebooks/
 │   └── math_derivations.ipynb
 │
+├── docs/
+│   └── visuals/
+│       ├── architecture.svg
+│       ├── training-loop.svg
+│       ├── evaluation-pipeline.svg
+│       └── gradient-flow.svg
+│
 ├── checkpoints/
 │   └── ... saved model parameters
 │
@@ -419,8 +385,6 @@ neural-net-scratch/
 | `train.py` | Training loop and checkpoint selection |
 | `evaluate.py` | Independent test-set evaluation |
 | `visualize.py` | Evaluation and training diagnostics |
-
----
 
 ## Design Principles
 
