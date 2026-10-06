@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="360" viewBox="0 0 1100 360">
+<rect width="1100" height="360" rx="24" fill="#0d1117"/>
+<text x="550" y="42" text-anchor="middle" fill="#f0f6fc" font-family="Arial" font-size="26" font-weight="700">Training Loop</text>
+<g font-family="Arial" text-anchor="middle" fill="#f0f6fc" font-size="17" font-weight="700">
+<g stroke="#58a6ff" stroke-width="2" fill="#161b22">
+<rect x="55" y="125" width="150" height="70" rx="14"/><rect x="250" y="125" width="150" height="70" rx="14"/>
+<rect x="445" y="125" width="150" height="70" rx="14"/><rect x="640" y="125" width="150" height="70" rx="14"/>
+<rect x="835" y="125" width="190" height="70" rx="14"/>
+</g>
+<text x="130" y="167">Mini-batch</text><text x="325" y="167">Forward pass</text><text x="520" y="167">Loss</text><text x="715" y="167">Backprop + Adam</text><text x="930" y="157">Validation</text><text x="930" y="181">Checkpoint?</text>
+</g>
+<g stroke="#8b949e" stroke-width="3"><path d="M205 160h45"/><path d="M400 160h45"/><path d="M595 160h45"/><path d="M790 160h45"/></g>
+<path d="M930 205 C930 285 130 285 130 200" fill="none" stroke="#3fb950" stroke-width="3" stroke-dasharray="8 8">
+<animate attributeName="stroke-dashoffset" from="0" to="-64" dur="1.2s" repeatCount="indefinite"/>
+</path>
+<circle cx="130" cy="200" r="6" fill="#3fb950"><animate attributeName="r" values="5;9;5" dur="1.2s" repeatCount="indefinite"/></circle>
+<text x="550" y="325" fill="#8b949e" font-family="Arial" font-size="15" text-anchor="middle">Animated concept: each epoch repeats the optimization cycle while the best validation checkpoint is retained.</text>
+</svg>
