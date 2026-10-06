@@ -1,126 +1,242 @@
 # Neural Network from Scratch
 
 <p align="center">
-  <strong>A NumPy-only neural network built from first principles for MNIST classification.</strong><br/>
-  Manual forward propagation, backpropagation, BatchNorm, Dropout, Softmax, Cross-Entropy, Adam, checkpointing, evaluation, and visualization — without PyTorch or TensorFlow.
+  <img src="docs/visuals/architecture.svg" alt="Neural Network Architecture" width="900"/>
+</p>
+
+<h1 align="center">A Neural Network Built From First Principles</h1>
+
+<p align="center">
+  <strong>NumPy • Manual Backpropagation • BatchNorm • Dropout • Adam • MNIST</strong><br/>
+  A framework-free implementation focused on understanding what happens inside a neural network.
 </p>
 
 <p align="center">
+  <a href="https://github.com/chamanvashishth/neural-net-scratch">
+    <img src="https://img.shields.io/badge/Code-GitHub-181717?logo=github" alt="GitHub"/>
+  </a>
   <img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white" alt="Python"/>
   <img src="https://img.shields.io/badge/NumPy-only-013243?logo=numpy&logoColor=white" alt="NumPy"/>
-  <img src="https://img.shields.io/badge/MNIST-Classifier-6f42c1" alt="MNIST"/>
-  <img src="https://img.shields.io/badge/Test%20Accuracy-97.4%25-2ea44f" alt="Test Accuracy"/>
+  <img src="https://img.shields.io/badge/MNIST-10%20Classes-6f42c1" alt="MNIST"/>
+  <img src="https://img.shields.io/badge/Parameters-235%2C146-8250df" alt="Parameters"/>
+  <img src="https://img.shields.io/badge/Reported%20Accuracy-97.4%25-2ea44f" alt="Reported Accuracy"/>
   <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="MIT License"/>
+</p>
+
+<p align="center">
+  <em>No PyTorch. No TensorFlow. No high-level neural-network API.</em>
 </p>
 
 ---
 
-## Overview
+## What is this?
 
-This project implements a fully connected neural network **from scratch using NumPy**.
+This repository is a **fully connected neural network implemented from scratch with NumPy** for handwritten-digit classification on MNIST.
 
-The goal is not to reproduce `model.fit()` with a different syntax. The goal is to understand and implement the mechanics that deep-learning frameworks normally hide:
+Instead of hiding the learning process behind a framework, the project implements the core pieces explicitly:
 
-- tensor operations and matrix multiplication
-- parameter initialization
-- forward propagation
-- activation functions
-- Batch Normalization
-- inverted Dropout
-- numerically stable Softmax
-- Cross-Entropy loss
-- manual backpropagation
-- Adam optimization with bias correction
-- learning-rate decay
-- validation-based checkpoint selection
-- independent test-set evaluation
-- classification metrics and visual diagnostics
+**data → tensors → layers → forward pass → loss → gradients → backpropagation → optimizer → checkpoint → evaluation**
 
-**No PyTorch. No TensorFlow. No high-level neural-network framework.**
+The project is intentionally small enough to inspect, but complete enough to train, save, evaluate, and diagnose a real model.
+
+> **Core idea:** don't just use a neural network — understand the machinery that makes it learn.
 
 ---
 
-## Why Build It From Scratch?
+## At a Glance
 
-Modern ML work becomes much easier to reason about when the underlying mechanics are understood.
-
-This implementation was built to answer questions such as:
-
-- What exactly happens during a forward pass?
-- How does the loss propagate backward through each layer?
-- Why does Softmax need numerical stabilization?
-- What does Dropout actually do during training?
-- Why does BatchNorm behave differently during inference?
-- How does Adam update each parameter?
-- How do we know whether a model actually generalizes?
-
-The repository therefore treats the neural network as an **engineering and learning system**, not just a trained model.
-
----
-
-## Architecture
-
-![Neural Network Architecture](docs/visuals/architecture.svg)
-
-The model is a compact fully connected classifier:
-
-```
-MNIST → Flatten/Normalize → Dense(784→256) → ReLU → BatchNorm → Dropout
-      → Dense(256→128) → ReLU → BatchNorm → Dropout
-      → Dense(128→10) → Stable Softmax
-```
-
-### Model specification
-
-| Component | Configuration |
+| Area | Implementation |
 |---|---|
-| Input | 784 features |
-| Hidden layer 1 | 256 units |
-| Hidden layer 2 | 128 units |
-| Output | 10 classes |
-| Activation | ReLU |
-| Normalization | BatchNorm |
+| Dataset | MNIST |
+| Task | 10-class image classification |
+| Input | 28×28 grayscale → 784 features |
+| Architecture | 784 → 256 → 128 → 10 |
+| Activations | ReLU + Stable Softmax |
+| Normalization | Batch Normalization |
 | Regularization | Inverted Dropout |
-| Output activation | Stable Softmax |
 | Loss | Cross-Entropy |
 | Optimizer | Adam |
-| Parameters | 235,146 |
 | Initialization | He / Kaiming |
-| Random seed | 42 |
-
-### Forward → backward → update
-
-![Animated training loop](docs/visuals/training-loop.svg)
-
-## Training Setup
-
-The current training configuration is:
-
-```text
-Epochs:          50
-Batch size:      128
-Learning rate:   0.001
-Adam β1:         0.9
-Adam β2:         0.999
-Adam ε:          1e-8
-LR decay:        0.95 every 10 epochs
-Seed:            42
-```
-
-The data flow is deliberately separated:
-
-```
-MNIST
- ├── Training set  → parameter updates
- ├── Validation set → model selection
- └── Test set       → final evaluation
-```
-
-The best checkpoint is selected using **validation accuracy**, while the test set remains untouched until final evaluation.
+| Trainable parameters | **235,146** |
+| Training epochs | 50 |
+| Batch size | 128 |
+| Validation | Held-out validation split |
+| Test set | 10,000 samples |
+| Evaluation | Accuracy, Precision, Recall, F1, Confusion Matrix |
+| Frameworks | **None** |
+| Numerical stack | NumPy |
 
 ---
 
-## Mathematical Foundations
+## Project Philosophy
+
+This project was built around a simple question:
+
+> **What actually happens inside `model.fit()`?**
+
+That question led to implementing the important pieces manually rather than relying on a deep-learning framework.
+
+### The implementation exposes
+
+- matrix multiplication and tensor shapes
+- parameter initialization
+- activation functions
+- forward propagation
+- loss computation
+- gradient computation
+- reverse-mode backpropagation
+- BatchNorm training/inference behavior
+- inverted Dropout
+- numerical stabilization
+- Adam moment estimation
+- learning-rate decay
+- checkpoint selection
+- independent test evaluation
+- error visualization
+
+This makes the repository useful both as an **ML implementation project** and as a compact reference for the mechanics of neural-network training.
+
+---
+
+## System Overview
+
+<p align="center">
+  <img src="docs/visuals/training-loop.svg" alt="Training loop"/>
+</p>
+
+The complete lifecycle is:
+
+```text
+                  ┌─────────────────────┐
+                  │       MNIST         │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │ Preprocess / Batch  │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │    Forward Pass    │
+                  │ Dense → ReLU → BN   │
+                  │ Dropout → Dense ... │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │   Cross-Entropy     │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │ Manual Backprop     │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │    Adam Update      │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │ Validation Check    │
+                  │ Save best checkpoint│
+                  └─────────────────────┘
+```
+
+---
+
+## Model Architecture
+
+<p align="center">
+  <img src="docs/visuals/architecture.svg" alt="Detailed neural network architecture"/>
+</p>
+
+### Forward path
+
+```text
+28×28 MNIST image
+       │
+       ▼
+Flatten + Normalize
+       │
+       ▼
+Dense: 784 → 256
+       │
+       ▼
+ReLU
+       │
+       ▼
+BatchNorm
+       │
+       ▼
+Dropout (p=0.30)
+       │
+       ▼
+Dense: 256 → 128
+       │
+       ▼
+ReLU
+       │
+       ▼
+BatchNorm
+       │
+       ▼
+Dropout (p=0.20)
+       │
+       ▼
+Dense: 128 → 10
+       │
+       ▼
+Numerically Stable Softmax
+       │
+       ▼
+Class probabilities
+```
+
+### Parameter scale
+
+The network contains **235,146 trainable parameters** distributed across the three dense layers and normalization parameters.
+
+The architecture is deliberately compact: large enough to demonstrate real optimization behavior, small enough to inspect mathematically.
+
+---
+
+## Training Configuration
+
+```text
+Epochs:              50
+Batch size:          128
+Initial learning rate: 0.001
+Adam β1:              0.9
+Adam β2:              0.999
+Adam ε:               1e-8
+Learning-rate decay:  0.95 every 10 epochs
+Random seed:          42
+```
+
+### Data separation
+
+The training process keeps the roles of the splits explicit:
+
+```text
+                 MNIST
+                   │
+       ┌───────────┼───────────┐
+       ▼           ▼           ▼
+    TRAIN         VAL         TEST
+       │           │           │
+       │           │           └── Final measurement
+       │           └────────────── Model selection
+       └────────────────────────── Parameter updates
+```
+
+The best checkpoint is selected from validation performance. The test set is reserved for final evaluation.
+
+---
+
+## The Mathematics
 
 ### Dense layer
 
@@ -136,20 +252,28 @@ ReLU(z) = max(0, z)
 
 ### Batch Normalization
 
-For batch statistics `μ` and `σ²`:
-
 ```text
 x̂ = (x - μ) / √(σ² + ε)
-y = γx̂ + β
+y  = γx̂ + β
 ```
 
 ### Inverted Dropout
 
-During training, activations are randomly masked and scaled by the inverse keep probability so that inference does not require an additional rescaling step.
+During training, activations are randomly masked and scaled by the inverse keep probability.
+
+This keeps the expected activation scale consistent between training and inference.
 
 ### Stable Softmax
 
-The implementation uses the log-sum-exp stabilization strategy to avoid numerical overflow when exponentiating large logits.
+For logits `z`, the implementation stabilizes exponentiation using the maximum logit:
+
+```text
+z'ᵢ = zᵢ - max(z)
+
+softmax(zᵢ) = exp(z'ᵢ) / Σⱼ exp(z'ⱼ)
+```
+
+This prevents large logits from causing exponential overflow.
 
 ### Cross-Entropy
 
@@ -157,30 +281,21 @@ The implementation uses the log-sum-exp stabilization strategy to avoid numerica
 L = -Σ y log(ŷ)
 ```
 
-### Softmax + Cross-Entropy gradient
-
-For one-hot targets:
+For a mini-batch:
 
 ```text
-δ = (ŷ - y) / m
+L = -(1/m) Σₙ Σₖ yₙₖ log(ŷₙₖ)
 ```
-
-This fused gradient avoids explicitly constructing the Softmax Jacobian.
 
 ---
 
-## Backpropagation
+## Manual Backpropagation
 
-Gradients are implemented manually rather than delegated to an automatic-differentiation framework.
+<p align="center">
+  <img src="docs/visuals/gradient-flow.svg" alt="Manual backpropagation"/>
+</p>
 
-The backward pass propagates gradients through:
-
-1. Softmax + Cross-Entropy
-2. output Dense layer
-3. Dropout
-4. BatchNorm
-5. ReLU
-6. hidden Dense layers
+The gradients are propagated explicitly through the computational graph.
 
 For a dense layer:
 
@@ -190,13 +305,45 @@ db = Σδ
 dA = δWᵀ
 ```
 
-This makes the repository useful as a compact reference for understanding how a multilayer neural network learns.
+For Softmax + Cross-Entropy with one-hot labels:
+
+```text
+δ = (ŷ - y) / m
+```
+
+The backward path covers:
+
+```text
+Loss
+ ↓
+Softmax + Cross-Entropy
+ ↓
+Dense
+ ↓
+Dropout
+ ↓
+BatchNorm
+ ↓
+ReLU
+ ↓
+Dense
+ ↓
+Dropout
+ ↓
+BatchNorm
+ ↓
+ReLU
+ ↓
+Dense
+```
+
+No automatic differentiation engine is responsible for these gradients.
 
 ---
 
 ## Adam Optimizer
 
-The optimizer implements Adam with first- and second-moment estimates and bias correction:
+Adam maintains first- and second-moment estimates of the gradients.
 
 ```text
 mₜ = β₁mₜ₋₁ + (1 - β₁)gₜ
@@ -208,24 +355,15 @@ v̂ₜ = vₜ / (1 - β₂ᵗ)
 θ ← θ - α · m̂ₜ / (√v̂ₜ + ε)
 ```
 
+The optimizer is implemented directly in the repository rather than imported from a framework.
+
 ---
 
-## Evaluation
+## Evaluation Pipeline
 
-The repository includes a dedicated `evaluate.py` pipeline.
-
-It:
-
-1. loads the held-out MNIST test set
-2. loads the saved best checkpoint
-3. generates predictions for the full test set
-4. calculates accuracy
-5. calculates macro precision
-6. calculates macro recall
-7. calculates macro F1
-8. calculates per-class F1
-9. generates a confusion matrix
-10. writes the evaluation report to `results/evaluation.json`
+<p align="center">
+  <img src="docs/visuals/evaluation-pipeline.svg" alt="Independent test evaluation"/>
+</p>
 
 Run:
 
@@ -233,104 +371,134 @@ Run:
 python evaluate.py
 ```
 
-Example output format:
+The evaluator:
 
-```text
-Test Accuracy: XX.XX%
-Macro Precision: XX.XX%
-Macro Recall: XX.XX%
-Macro F1: XX.XX%
-```
+1. loads the held-out MNIST test split
+2. loads the saved checkpoint
+3. performs inference with training behavior disabled
+4. generates predictions for all test samples
+5. computes classification metrics
+6. computes per-class F1
+7. builds the confusion matrix
+8. writes `results/evaluation.json`
 
-The test set is used only for final evaluation, not for parameter updates.
+### Metrics
 
----
-
-## Reported Results
-
-The repository currently reports the following benchmark values:
-
-| Metric | Reported value |
-|---|---:|
-| Test Accuracy | **97.4%** |
-| Macro Precision | **97.0%** |
-| Macro Recall | **97.0%** |
-| Macro F1 | **97.0%** |
-| Best class | Digit 1 — 99.2% F1 |
-| Lowest reported class | Digit 5 — 95.5% F1 |
-| Trainable parameters | **235,146** |
-
-> **Reproducibility note:** these values are repository-reported benchmark results. Run `python evaluate.py` locally to reproduce the current checkpoint's metrics.
-
----
-
-## Diagnostics & Visualizations
-
-The repository includes a dedicated visualization pipeline:
-
-```bash
-python visualize.py
-```
-
-The generated charts are experiment artifacts rather than static documentation assets. This keeps the repository clean while allowing every plot to be regenerated from the current checkpoint and `results/history.json`.
-
-### Evaluation flow
-
-![Independent test evaluation](docs/visuals/evaluation-pipeline.svg)
-
-### Training and model internals
-
-![Manual backpropagation](docs/visuals/gradient-flow.svg)
-
-### Generated diagnostics
-
-After running `python visualize.py`, the following files are produced locally:
-
-| Artifact | Purpose |
+| Metric | What it answers |
 |---|---|
-| `results/loss_curve.png` | Training vs validation loss |
-| `results/accuracy_curve.png` | Training vs validation accuracy |
-| `results/confusion_matrix.png` | Class-level error distribution |
-| `results/weight_distributions.png` | Initial vs final weight distributions |
-| `results/sample_predictions.png` | Visual prediction inspection |
-| `results/per_class_f1.png` | F1 score by digit |
+| Accuracy | How often is the predicted class correct? |
+| Precision | When the model predicts a class, how often is it correct? |
+| Recall | How much of each class does the model recover? |
+| Macro F1 | How balanced is performance across classes? |
+| Confusion Matrix | Which digits does the model confuse? |
 
-> **Why are the PNGs not embedded here?** GitHub previously showed broken-image placeholders because those generated files were not committed to the repository. The README now uses versioned SVG documentation assets that always render, while the real experiment plots remain reproducible through `visualize.py`.
+---
 
-## Quick Start
+## Reported Benchmark
 
-### 1. Clone
+The repository currently reports:
+
+| Metric | Reported |
+|---|---:|
+| **Test Accuracy** | **97.4%** |
+| Macro Precision | 97.0% |
+| Macro Recall | 97.0% |
+| Macro F1 | 97.0% |
+| Best reported class | Digit 1 — 99.2% F1 |
+| Lowest reported class | Digit 5 — 95.5% F1 |
+| Trainable parameters | 235,146 |
+
+> **Important:** these are repository-reported benchmark values. Run the evaluation locally to verify the current checkpoint rather than treating README numbers as immutable results.
+
+---
+
+## Reproducibility
+
+The project keeps training and evaluation deterministic where practical through a fixed NumPy seed:
+
+```python
+np.random.seed(42)
+```
+
+### Reproduce
 
 ```bash
 git clone https://github.com/chamanvashishth/neural-net-scratch.git
 cd neural-net-scratch
-```
 
-### 2. Install dependencies
-
-```bash
 pip install -r requirements.txt
-```
 
-### 3. Train
-
-```bash
 python train.py
-```
-
-MNIST is downloaded automatically on first run.
-
-### 4. Evaluate the saved model
-
-```bash
 python evaluate.py
+python visualize.py
 ```
 
-### 5. Generate diagnostics
+MNIST is downloaded automatically by the data loader when required.
+
+Generated artifacts are written under:
+
+```text
+results/
+├── history.json
+├── evaluation.json
+├── loss_curve.png
+├── accuracy_curve.png
+├── confusion_matrix.png
+├── weight_distributions.png
+├── sample_predictions.png
+└── per_class_f1.png
+```
+
+---
+
+## Diagnostics
+
+The visualization pipeline exposes several different failure modes instead of relying on accuracy alone.
 
 ```bash
 python visualize.py
 ```
+
+### Training behavior
+
+- training loss
+- validation loss
+- training accuracy
+- validation accuracy
+- best validation epoch
+
+### Classification behavior
+
+- normalized confusion matrix
+- per-class F1
+- sample-level predictions
+- prediction confidence
+
+### Parameter behavior
+
+- initial weight distributions
+- final weight distributions
+
+This makes it possible to ask not only **"How accurate is the model?"**, but also:
+
+> **"How is it learning, where does it fail, and what changed inside the parameters?"**
+
+---
+
+## Implementation Map
+
+| File | Responsibility |
+|---|---|
+| `src/layers.py` | Dense, ReLU, BatchNorm, Dropout, Softmax |
+| `src/losses.py` | Cross-Entropy and numerical stability |
+| `src/optimizers.py` | Adam and parameter updates |
+| `src/network.py` | Network composition, forward/backward/update |
+| `src/data_loader.py` | MNIST download, preprocessing and batching |
+| `src/metrics.py` | Accuracy, precision, recall, F1, confusion matrix |
+| `train.py` | Training loop, validation and checkpoint selection |
+| `evaluate.py` | Final held-out test evaluation |
+| `visualize.py` | Training and evaluation diagnostics |
+| `notebooks/math_derivations.ipynb` | Mathematical derivations |
 
 ---
 
@@ -358,12 +526,12 @@ neural-net-scratch/
 │       └── gradient-flow.svg
 │
 ├── checkpoints/
-│   └── ... saved model parameters
+│   └── saved model parameters
 │
 ├── results/
 │   ├── history.json
 │   ├── evaluation.json
-│   └── ... generated plots
+│   └── generated diagnostics
 │
 ├── train.py
 ├── evaluate.py
@@ -372,36 +540,119 @@ neural-net-scratch/
 └── README.md
 ```
 
-### Module responsibilities
+---
 
-| Module | Responsibility |
-|---|---|
-| `layers.py` | Dense, ReLU, BatchNorm, Dropout, Softmax |
-| `losses.py` | Cross-Entropy and numerical stability |
-| `optimizers.py` | Adam optimizer |
-| `network.py` | Model composition, forward/backward/update |
-| `data_loader.py` | MNIST download, preprocessing and batching |
-| `metrics.py` | Accuracy, precision, recall, F1 and confusion matrix |
-| `train.py` | Training loop and checkpoint selection |
-| `evaluate.py` | Independent test-set evaluation |
-| `visualize.py` | Evaluation and training diagnostics |
+## Engineering Decisions
 
-## Design Principles
+### Framework-free core
 
-### 1. Understand before abstracting
-Core ML operations are implemented explicitly so the learning process remains inspectable.
+The neural-network implementation uses NumPy for numerical computation rather than PyTorch or TensorFlow.
 
-### 2. Keep inference separate from training
-Dropout and BatchNorm use the appropriate inference behavior when evaluating the model.
+### Validation-based checkpointing
 
-### 3. Protect the test set
-Validation data is used for model selection; the test set is reserved for final measurement.
+The training loop saves the model whenever validation accuracy improves.
 
-### 4. Prefer numerical stability
-Softmax and Cross-Entropy are implemented with numerical stability in mind.
+### Separate inference path
 
-### 5. Make experiments reproducible
-A fixed random seed and persisted training history make experiments easier to inspect and reproduce.
+Evaluation calls the model in inference mode so training-specific behavior such as Dropout is not applied.
+
+### Numerical stability
+
+Softmax is stabilized before exponentiation and Cross-Entropy uses the resulting probabilities safely.
+
+### Inspectable state
+
+Training history and evaluation results are persisted as JSON, while model parameters are saved as checkpoints.
+
+---
+
+## What This Project Demonstrates
+
+This project demonstrates implementation-level understanding of:
+
+- neural-network architecture
+- matrix and tensor operations
+- forward propagation
+- reverse-mode gradient propagation
+- numerical stability
+- normalization
+- regularization
+- adaptive optimization
+- checkpointing
+- validation methodology
+- held-out test evaluation
+- classification metrics
+- error analysis
+- experiment visualization
+
+More importantly, it demonstrates the ability to move below the abstraction layer of a high-level ML framework and implement the learning mechanics directly.
+
+---
+
+## Limitations
+
+This is a **fully connected MNIST classifier**, not a production vision system.
+
+It intentionally does not attempt to compete with modern convolutional or transformer-based vision architectures.
+
+The project is designed to optimize for:
+
+- transparency
+- mathematical understanding
+- inspectability
+- reproducibility
+- implementation depth
+
+rather than benchmark chasing.
+
+---
+
+## Possible Extensions
+
+Natural next experiments include:
+
+- finite-difference gradient checking
+- ablation of BatchNorm
+- ablation of Dropout
+- optimizer comparisons
+- systematic hyperparameter sweeps
+- confidence calibration
+- harder datasets
+- convolutional layers from scratch
+- experiment tracking
+- error clustering and failure analysis
+
+These extensions would turn the repository from a single implementation into a broader experimental ML laboratory.
+
+---
+
+## Quick Start
+
+### Install
+
+```bash
+git clone https://github.com/chamanvashishth/neural-net-scratch.git
+cd neural-net-scratch
+pip install -r requirements.txt
+```
+
+### Train
+
+```bash
+python train.py
+```
+
+### Evaluate
+
+```bash
+python evaluate.py
+```
+
+### Visualize
+
+```bash
+python visualize.py
+```
 
 ---
 
@@ -415,45 +666,7 @@ requests>=2.28
 tqdm>=4.65
 ```
 
-The neural-network implementation itself does not depend on PyTorch or TensorFlow.
-
----
-
-## What This Project Demonstrates
-
-This project is primarily an **implementation and learning artifact**.
-
-It demonstrates practical understanding of:
-
-- neural-network architecture
-- tensor and matrix operations
-- gradient-based optimization
-- manual differentiation
-- regularization
-- normalization
-- numerical stability
-- model checkpointing
-- validation vs test methodology
-- classification metrics
-- model diagnostics
-
-It is also intended to serve as a foundation for moving from framework-level ML usage toward understanding and implementing ML systems from first principles.
-
----
-
-## Future Directions
-
-Possible extensions include:
-
-- gradient checking with finite differences
-- systematic hyperparameter experiments
-- stronger experiment tracking
-- calibration analysis
-- confidence/error analysis
-- ablation studies for BatchNorm and Dropout
-- additional optimizers
-- convolutional layers implemented from scratch
-- benchmarking against other scratch implementations
+The model implementation itself does not use PyTorch, TensorFlow, or a high-level neural-network training API.
 
 ---
 
@@ -465,15 +678,19 @@ This project is licensed under the **MIT License**.
 
 ## Author
 
-**Chaman Vashishth**
+<p align="center">
+  <strong>Chaman Vashishth</strong><br/>
+  AI/ML Engineering • Machine Learning Systems • Applied AI
+</p>
 
-AI/ML Engineering • Machine Learning Systems • Applied AI
-
-- GitHub: https://github.com/chamanvashishth
-- LinkedIn: https://www.linkedin.com/in/chamanvashishth
+<p align="center">
+  <a href="https://github.com/chamanvashishth">GitHub</a> •
+  <a href="https://www.linkedin.com/in/chamanvashishth">LinkedIn</a>
+</p>
 
 ---
 
 <p align="center">
-  Built from first principles with NumPy.
+  <strong>Built from first principles with NumPy.</strong><br/>
+  <sub>Understand the gradient. Understand the model.</sub>
 </p>
